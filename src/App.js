@@ -67,12 +67,14 @@ class App extends Component {
   }
   render() {
     return (
-      <div className='App'>
+      <div className='App'data-testid="country">
         {
           !this.state.isShowData ? (
             <>
-              <input id="countryName" autoFocus="autoFocus" placeholder="Country Name" value={this.state.Value} onChange={this.handleChange} />
-              <button onClick={this.handleSubmit} disabled={!this.state.Value} >Submit</button>
+                <div >
+                    <input id="countryName" autoFocus="autoFocus" placeholder="Country Name" value={this.state.Value} onChange={this.handleChange} />
+                    <button onClick={this.handleSubmit} disabled={!this.state.Value} >Submit</button>
+                </div>
             </>
           ) : null
         }
