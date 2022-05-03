@@ -35,7 +35,7 @@ class App extends Component {
         .then(res => {
           this.setState({ isShow: true })
           if (res.status === 200) {
-            console.log(res.data)
+            // console.log(res.data)
             this.setState({ isShowData: true });
             this.setState({ Message1: res.data[0].capital });
             this.setState({ Message2: res.data[0].population });
@@ -67,23 +67,24 @@ class App extends Component {
   }
   render() {
     return (
-      <div className='App'data-testid="country">
+      <div className='App'data-testid='country'>
         {
           !this.state.isShowData ? (
             <>
                 <div >
-                    <input id="countryName" autoFocus="autoFocus" placeholder="Country Name" value={this.state.Value} onChange={this.handleChange} />
-                    <button onClick={this.handleSubmit} disabled={!this.state.Value} >Submit</button>
+                  <label htmlFor = 'countryName'>Enter Country Name</label>
+                    <input  id="countryName" autoFocus="autoFocus" placeholder="Country Name" value={this.state.Value} onChange={this.handleChange} />
+                    <br/>
+                    <button data-testid ="Name"type = "submit" onClick={this.handleSubmit} disabled={!this.state.Value} >Submit</button>
                 </div>
             </>
           ) : null
         }
-
         {
           this.state.isShow && !this.state.isShowCapital ? (
             this.state.isShowData ? (
-              <div className = 'App1'>
-                  <table>
+              <div   className = 'App1' data-testid = 'call'>
+                  <table >
                         <tr>
                             <th>Capital</th>
                             <th>Population</th>
