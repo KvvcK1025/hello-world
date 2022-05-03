@@ -31,51 +31,50 @@ class App extends Component {
   }
   handleSubmit = async () => {
     try {
-      await axios.get(`https://restcountries.com/v3.1/name/{{${this.state.Value}}}`)
-        .then(res => {
-          this.setState({ isShow: true })
-          if (res.status === 200) {
-            // console.log(res.data)
-            this.setState({ isShowData: true });
-            this.setState({ Message1: res.data[0].capital });
-            this.setState({ Message2: res.data[0].population });
-            this.setState({ Message3: res.data[0].latlng[0] + " " + res.data[0].latlng[1]});
-            this.setState({ Message4: res.data[0].flag });
-          }
-        })
-    } catch (err) {
-      this.setState({ isShow: true })
-      this.setState({ Message6: "please provide a valid Country Name" });
+      const res = await axios.get(`https://restcountries.com/v3.1/name/{{${this.state.Value}}}`);
+      this.setState({ isShow: true });
+      if(res)
+      if(res['status'] === 200){
+        this.setState({ isShowData: true });
+        this.setState({ Message1: res.data[0].capital });
+        this.setState({ Message2: res.data[0].population });
+        this.setState({ Message3: res.data[0].latlng[0] + " " + res.data[0].latlng[1]});
+        this.setState({ Message4: res.data[0].flag });      
+      }
+      //console.log(res)
+    } catch (err){
+      this.setState({ isShow: true });
+      this.setState({ Message6: "Please provide a valid Country Name" });
       console.log(err);
     }
   }
   handleSubmitCapital = async () => {
     try {
-      await axios.get(`http://api.weatherstack.com/current?access_key=aeb6065506c53f048c81581e17caeed9&query={{${this.state.Message1}}}`)
-        .then(res1 => {
-          this.setState({ isShowCapital: true })
-          if (res1.status === 200) {
-            this.setState({ Message7: res1.data.current.temperature });
-            this.setState({ Message8: res1.data.current.weather_icons });
-            this.setState({ Message9: res1.data.current.wind_speed });
-            this.setState({ Message10: res1.data.current.precip });
-          }
-        })
+      //console.log('hi')
+      const res1 = await axios.get(`http://api.weatherstack.com/current?access_key=aeb6065506c53f048c81581e17caeed9&query={{${this.state.Message1}}}`)
+      this.setState({ isShowCapital: true })
+      if(res1)
+      if(res1['status'] === 200){
+        this.setState({ Message7: res1.data.current.temperature });
+        this.setState({ Message8: res1.data.current.weather_icons });
+        this.setState({ Message9: res1.data.current.wind_speed });
+        this.setState({ Message10: res1.data.current.precip });
+      }
     } catch (err) {
       console.log(err);
     }
   }
   render() {
     return (
-      <div className='App'data-testid='country'>
+      <div className='App A'>
         {
           !this.state.isShowData ? (
             <>
                 <div >
-                  <label htmlFor = 'countryName'>Enter Country Name</label>
+                  <label htmlFor = 'countryName'>Enter Country Name</label><br/><br/>
                     <input  id="countryName" autoFocus="autoFocus" placeholder="Country Name" value={this.state.Value} onChange={this.handleChange} />
-                    <br/>
-                    <button data-testid ="Name"type = "submit" onClick={this.handleSubmit} disabled={!this.state.Value} >Submit</button>
+                    <br/><br/>
+                    <button type = "submit" onClick={this.handleSubmit} disabled={!this.state.Value} >Submit</button>
                 </div>
             </>
           ) : null
@@ -83,20 +82,24 @@ class App extends Component {
         {
           this.state.isShow && !this.state.isShowCapital ? (
             this.state.isShowData ? (
-              <div   className = 'App1' data-testid = 'call'>
-                  <table >
-                        <tr>
-                            <th>Capital</th>
-                            <th>Population</th>
-                            <th>Lonlang</th>
-                            <th>Flag</th>
-                        </tr>
-                        <tr>
-                            <td><button onClick={this.handleSubmitCapital} value={this.state.Message1}>{this.state.Message1} </button></td>
-                            <td>{this.state.Message2}</td>
-                            <td>{this.state.Message3}</td>
-                            <td>{this.state.Message4}</td>
-                         </tr>
+              <div className = 'App A2'>
+                  <table>
+                        <thead>
+                          <tr>
+                              <th>Capital</th>
+                              <th>Population</th>
+                              <th>Lonlang</th>
+                              <th>Flag</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                              <td><button onClick={this.handleSubmitCapital} type = "submit" value={this.state.Message1}>{this.state.Message1} </button></td>
+                              <td>{this.state.Message2}</td>
+                              <td>{this.state.Message3}</td>
+                              <td>{this.state.Message4}</td>
+                          </tr>
+                        </tbody>
                     </table>
               </div>
             ) : (
@@ -108,20 +111,24 @@ class App extends Component {
         }
         {
           this.state.isShowCapital === true ? (
-            <div className = 'App1'>
+            <div className = 'App A2'>
                 <table>
-                    <tr>
-                        <th>Temperature</th>
-                        <th>Weather</th>
-                        <th>WindSpeed</th>
-                        <th>Precipitation</th>
-                    </tr>
-                    <tr>
+                    <thead>
+                      <tr>
+                          <th>Temperature</th>
+                          <th>Weather</th>
+                          <th>WindSpeed</th>
+                          <th>Precipitation</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
                         <td>{this.state.Message7} C</td>
-                        <td><img src={this.state.Message8}></img></td>
+                        <td><img src={this.state.Message8} alt="Country"></img></td>
                         <td>{this.state.Message9}</td>
                         <td>{this.state.Message10}</td>
-                        </tr>
+                      </tr>
+                    </tbody>
                 </table>
             </div>
           ) : null
