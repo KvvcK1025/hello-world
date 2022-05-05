@@ -1,15 +1,11 @@
 import { render, screen, waitFor, fireEvent} from '@testing-library/react';
-import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
-import Enzyme, { shallow, mount} from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-Enzyme.configure({ adapter: new Adapter() });
 const axios = require('axios');
 
 jest.mock('axios');
 import App from './App';
 
-describe('Test for App', () =>{
+describe('Test for input feild', () =>{
   it('Test for input value is null at page reload',() => {
     render(<App />)
     const input = screen.getByLabelText('Enter Country Name')
@@ -17,7 +13,7 @@ describe('Test for App', () =>{
   });
   it('Test for button is disable',() => {
     render(<App />)
-    const button = screen.getByRole('button',{description: 'Submit'})
+    const button = screen.getByRole('button',{name: 'Submit'})
     expect(button).toBeDisabled();
   });
   it('Test for input value is provided',() => {
@@ -30,16 +26,19 @@ describe('Test for App', () =>{
     render(<App />)
     const input = screen.getByLabelText('Enter Country Name')
     fireEvent.change(input, {target: {value: 'Hello'}})
-    const button = screen.getByRole('button',{description: 'Submit'})
+    const button = screen.getByRole('button',{name: 'Submit'})
     expect(button).toBeEnabled();
   });
-  it('Test for button trigerring the function call',() => {
+  it('Test for input value is provided',() => {
     render(<App />)
     const input = screen.getByLabelText('Enter Country Name')
     fireEvent.change(input, {target: {value: 'Hello'}})
-    const button = screen.getByRole('button',{description: 'Submit'})
+    const button = screen.getByRole('button',{name: 'Submit'})
     fireEvent.click(button)
   });
+})
+
+describe('Test for API call',() => {
   it('Check API call with valid', async () => {
     await axios.get.mockResolvedValue({
       status: 200,
@@ -56,7 +55,7 @@ describe('Test for App', () =>{
     render(<App />)
     const input = screen.getByLabelText('Enter Country Name')
     fireEvent.change(input, {target: {value: 'India'}})
-    const button = screen.getByRole('button',{description: 'Submit'})
+    const button = screen.getByRole('button',{name: 'Submit'})
     await fireEvent.click(button)
     const table = await screen.findByRole('table')
     expect(table).toBeVisible
@@ -75,7 +74,7 @@ describe('Test for App', () =>{
     render(<App />)
     const input = screen.getByLabelText('Enter Country Name')
     fireEvent.change(input, {target: {value: 'India'}})
-    const button = screen.getByRole('button',{description: 'Submit'})
+    const button = screen.getByRole('button',{name: 'Submit'})
     await fireEvent.click(button)
     const heading = await screen.findByRole('heading')
     expect(heading).toBeVisible
@@ -97,9 +96,9 @@ describe('Test for App', () =>{
     render(<App />)
     const input = screen.getByLabelText('Enter Country Name')
     fireEvent.change(input, {target: {value: 'India'}})
-    const button = screen.getByRole('button',{description: 'Submit'})
+    const button = screen.getByRole('button',{name: 'Submit'})
     await fireEvent.click(button)
-    const capitalButton = await screen.findByRole('button',{description: 'New Delhi'})
+    const capitalButton = await screen.findByRole('button',{name: 'New Delhi'})
     expect(capitalButton).toBeVisible
   });
   
@@ -130,16 +129,13 @@ describe('Test for App', () =>{
     render(<App />)
     const input = screen.getByLabelText('Enter Country Name')
     fireEvent.change(input, {target: {value: 'India'}})
-    const button = screen.getByRole('button',{description: 'Submit'})
+    const button = screen.getByRole('button',{name: 'Submit'})
     fireEvent.click(button)
     const capitalButton = await waitFor(() => {
-      return screen.findByRole('button',{description: 'New Delhi'}) 
+      return screen.findByRole('button',{name: 'New Delhi'}) 
     });
     fireEvent.click(capitalButton)
     const tabledata = screen.findByText("Weather")
     expect(tabledata).toBeVisible
   });
 })
-
-
-
